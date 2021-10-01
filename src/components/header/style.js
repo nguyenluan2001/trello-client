@@ -7,6 +7,9 @@ padding:.5rem;
 display:flex;
 justify-content:space-between;
 align-items:center;
+width:100vw;
+position:fixed;
+box-sizing:border-box;
 `
 export const Logo=styled(Link)`
 display:flex;

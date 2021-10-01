@@ -8,5 +8,6 @@ const boardApi={
     {
         return await axiosClient.get("/api/board")
     }
+
 }
 export default boardApi

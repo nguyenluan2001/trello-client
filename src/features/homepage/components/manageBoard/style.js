@@ -2,11 +2,13 @@ import styled from "styled-components";
 export const Container=styled.div`
 background:rgb(238,238,238);
 flex:1;
-
+// overflow-x:scroll;
+// height:100vh;
 `
 export const Content=styled.div`
-width:95%;
+// width:95%;
 margin:0px auto;
+padding:20px;
 `
 export const ListBoards=styled.div`
 display:grid;
@@ -50,9 +52,9 @@ span{
 `
 export const ManageArea=styled.div`
 display:flex;
-&{
-    div + div{
-        margin-left:10px;
-    }
-}
+// &{
+//     div + div{
+//         margin-left:10px;
+//     }
+// }
 `

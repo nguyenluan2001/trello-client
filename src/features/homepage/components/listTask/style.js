@@ -1,7 +1,8 @@
 import styled from "styled-components";
 export const Container=styled.div`
-width:20vw;
+width:300px;
 color:white;
+margin-right:10px;
 button.new-task{
     display:block;
     margin:0px auto;
@@ -21,6 +22,7 @@ button.new-task{
 export const Content=styled.div`
 background:rgb(37,71,103);
 border-radius:10px;
+width:100%;
 `
 export const Header=styled.div`
 padding:0.5rem;
@@ -80,4 +82,7 @@ export const CreateTask=styled.div`
         cursor:pointer;
     }
 
+`
+export const ListCard=styled.div`
+padding:0.5rem 0rem;
 `
