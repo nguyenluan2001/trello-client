@@ -8,6 +8,7 @@ const boardSlice = createSlice({
         getBoard: (state, action) => {
             return action.payload
         },
+
         // ==== LIST =====
         createList: (state, action) => {
 
@@ -94,6 +95,13 @@ const boardSlice = createSlice({
                 }
             })
             state.lists=cloneLists
+        },
+        updateOrderCard:(state,action)=>{},
+        updateOrderCardSuccess:(state,action)=>{
+
+        },
+        updateBoardTitleInManage:(state,action)=>{
+            state.title=action.payload.title
         }
     }
 
@@ -105,6 +113,8 @@ export const { getBoard,
     deleteList, deleteListSuccess,
     createCard,createCardSuccess,
     deleteCard,deleteCardSuccess,
-    updateCardTitle,updateCardTitleSuccess
+    updateCardTitle,updateCardTitleSuccess,
+    updateOrderCard,updateOrderCardSuccess,
+    updateBoardTitleInManage
 } = boardSlice.actions
 export default boardSlice.reducer

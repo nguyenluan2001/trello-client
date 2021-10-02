@@ -11,6 +11,7 @@ function CreateBoard() {
         e.preventDefault()
         console.log(boardTitle)
         dispatch(addNewBoard(boardTitle))
+        setToggleForm(false)
     }
     function handleToggleForm(e)
     {

@@ -1,27 +1,49 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef,useCallback} from 'react'
 import { FaTrashAlt, FaPlus } from "react-icons/fa"
 import { Container, Content, Header, CreateTask, ListCard } from "./style"
 import { useDrag, useDrop } from "react-dnd"
 import { useDispatch } from "react-redux"
 import { deleteList, updateOrderList, createCard, updateListTitle } from "../../../../services/slices/boardSlice"
 import CardItem from '../cardItem/CardItem'
-function ListTask({ list, index, moveCard, cloneList }) {
+import update from "immutability-helper";
+function ListTask({ list, index, moveList, cloneList }) {
     const [editListTitle, setEditListTitle] = useState(false)
     const [createTask, setCreateTask] = useState(false)
     const [cardTitle, setCardTitle] = useState("")
     const [chooseCard, setChooseCard] = useState("")
     const [listTitle,setListTitle]=useState(list?.title)
+    const [cloneCard,setCloneCard]=useState([...list?.cards])
     const ref = useRef(null)
     const dispatch = useDispatch()
+    useEffect(()=>{
+        if(list?.cards)
+        {
+            setCloneCard([...list?.cards])
+        }
+    },[list?.cards])
+    const moveCard = useCallback((dragIndex, hoverIndex) => {
+        const dragCard = cloneCard[dragIndex];
+        console.log("dragcard",dragCard)
+        console.log("clonecard",cloneCard)
+        setCloneCard(update(cloneCard, {
+            $splice: [
+                [dragIndex, 1],
+                [hoverIndex, 0, dragCard],
+            ],
+        }));
+       
+        console.log("dragindex",dragIndex)
+        console.log("hoverindex",hoverIndex)
+    }, [cloneCard]);
     const [{ isDragging }, drag] = useDrag(() => ({
-        type: "card",
+        type: "list",
         item: { index, list },
         collect: monitor => ({
             isDragging: !!monitor.isDragging(),
         }),
     }))
     const [{ handlerId }, drop] = useDrop({
-        accept: "card",
+        accept: "list",
         collect(monitor) {
             return {
                 handlerId: monitor.getHandlerId(),
@@ -69,7 +91,7 @@ function ListTask({ list, index, moveCard, cloneList }) {
                 return;
             }
             // Time to actually perform the action
-            moveCard(dragIndex, hoverIndex);
+            moveList(dragIndex, hoverIndex);
             // Note: we're mutating the monitor item here!
             // Generally it's better to avoid mutations,
             // but it's good here for the sake of performance
@@ -95,8 +117,8 @@ function ListTask({ list, index, moveCard, cloneList }) {
         setEditListTitle(false)
     }
     return (
-        <Container ref={ref} style={{ opacity: isDragging && "0" }} data-handler-id={handlerId}>
-            <Content>
+        <Container ref={ref} style={{ opacity: isDragging?"0":"1" }} data-handler-id={handlerId}>
+            <Content >
                 <Header>
                     {
                         editListTitle
@@ -115,8 +137,8 @@ function ListTask({ list, index, moveCard, cloneList }) {
                 </Header>
                 <ListCard>
                     {
-                        list?.cards?.map(item => {
-                            return <CardItem card={item} chooseCard={chooseCard} setChooseCard={setChooseCard}></CardItem>
+                        cloneCard?.map((item,index) => {
+                            return <CardItem cloneCard={cloneCard} moveCard={moveCard} key={item?._id} index={index} card={item} chooseCard={chooseCard} setChooseCard={setChooseCard}></CardItem>
                         })
                     }
                 </ListCard>

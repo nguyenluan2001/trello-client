@@ -5,7 +5,9 @@ function* createListWorker(action)
 {
     let {title,boardId}=action.payload
     let res=yield call(listApi.createList,title,boardId)
-    yield put(createListSuccess(res.data.list))
+    let list=res.data.list
+    list.cards=[]
+    yield put(createListSuccess(list))
     console.log(res)
 }
 function* deleteListWorker(action)

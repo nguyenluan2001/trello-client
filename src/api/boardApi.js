@@ -7,6 +7,14 @@ const boardApi={
     async getBoards()
     {
         return await axiosClient.get("/api/board")
+    },
+    async deleteBoard(id)
+    {
+        return await axiosClient.delete(`/api/board/${id}`)
+    },
+    async updateTitle(id,title)
+    {
+        return await axiosClient.put(`/api/board/${id}`,{title})
     }
 
 }

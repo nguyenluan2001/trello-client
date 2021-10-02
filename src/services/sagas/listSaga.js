@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "@redux-saga/core/effects"
 import cardApi from "../../api/cardApi"
-import { createCardSuccess, deleteCardSuccess, updateCardTitleSuccess } from "../slices/boardSlice"
+import { createCardSuccess, deleteCardSuccess, updateCardTitleSuccess, updateOrderCardSuccess } from "../slices/boardSlice"
 function* createCardWorker(action)
 {
     let {title,listId,boardId}=action.payload
@@ -20,11 +20,18 @@ function* updateCardTitleWorker(action)
     let res=yield call(cardApi.updateCardTitle,id,title)
     yield put(updateCardTitleSuccess(res.data.card))
 }
+function* updateOrderCardWorker(action)
+{
+    let res=yield call(cardApi.updateOrderCard,action.payload)
+    yield put(updateOrderCardSuccess(res.data.cards))
+    console.log("response",res.data)
+}
 function* listSaga()
 {
     console.log("list saga")
     yield takeEvery("board/createCard",createCardWorker)
     yield takeEvery("board/deleteCard",deleteCardWorker)
     yield takeEvery("board/updateCardTitle",updateCardTitleWorker)
+    yield takeEvery("board/updateOrderCard",updateOrderCardWorker)
 }
 export default listSaga
