@@ -16,6 +16,10 @@ const cardApi={
     async updateOrderCard(cards)
     {
         return await axiosClient.post("/api/card/updateOrderCard",{cards})
+    },
+    async updateDueDate(id,due_date)
+    {
+        return await axiosClient.put(`/api/card/updateDueDate/${id}`,{due_date})
     }
 }
 export default cardApi

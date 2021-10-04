@@ -102,6 +102,24 @@ const boardSlice = createSlice({
         },
         updateBoardTitleInManage:(state,action)=>{
             state.title=action.payload.title
+        },
+        updateDueDateCard:(state,action)=>{
+        },
+        updateDueDateCardSuccess:(state,action)=>{
+            let cloneLists=[...state.lists]
+            cloneLists=cloneLists.map(item=>{
+                if(item._id==action.payload.card.listId)
+                {
+                    let index=item?.cards.findIndex(card=>card._id==action.payload.card._id)
+                    item.cards[index].due_date=action.payload.due_date
+                    return item
+                }
+                else
+                {
+                    return item
+                }
+            })
+            state.lists=cloneLists
         }
     }
 
@@ -115,6 +133,7 @@ export const { getBoard,
     deleteCard,deleteCardSuccess,
     updateCardTitle,updateCardTitleSuccess,
     updateOrderCard,updateOrderCardSuccess,
-    updateBoardTitleInManage
+    updateBoardTitleInManage,
+    updateDueDateCard,updateDueDateCardSuccess
 } = boardSlice.actions
 export default boardSlice.reducer

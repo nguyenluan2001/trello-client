@@ -4,22 +4,24 @@ import { FaTrashAlt, FaRegClock, FaTimes } from "react-icons/fa"
 import { useDispatch } from "react-redux"
 import { deleteCard, updateCardTitle } from "../../../../services/slices/boardSlice"
 import { useDrag, useDrop } from "react-dnd"
-import {updateOrderCard} from "../../../../services/slices/boardSlice"
-function CardItem({cloneCard, index, card, chooseCard, setChooseCard, moveCard }) {
+import { updateOrderCard } from "../../../../services/slices/boardSlice"
+import DueDate from '../dueDate/DueDate'
+function CardItem({ cloneCard, index, card, chooseCard, setChooseCard, moveCard }) {
     const [toggleSetting, setToggleSetting] = useState(false)
+    const [toggleDayPicker, setToggleDayPicker] = useState(false)
     const [cardTitle, setCardTitle] = useState(card?.title)
     const formRef = useRef()
     const cardRef = useRef()
     const dispatch = useDispatch()
     const [{ isDragging }, drag] = useDrag(() => ({
         type: "card",
-        item: {index,card},
+        item: { index, card },
         collect: monitor => ({
             isDragging: !!monitor.isDragging(),
         }),
-        
-        
-       
+
+
+
     }))
     const [{ handlerId }, drop] = useDrop({
         accept: "card",
@@ -29,7 +31,7 @@ function CardItem({cloneCard, index, card, chooseCard, setChooseCard, moveCard }
             };
         },
         drop(item, monitor) {
-            console.log("clonecard",cloneCard)
+            console.log("clonecard", cloneCard)
             // dispatch(updateOrderList(cloneList))
             console.log("card drop")
             // console.log("list id",card.listId)
@@ -93,6 +95,11 @@ function CardItem({cloneCard, index, card, chooseCard, setChooseCard, moveCard }
             formRef.current.focus()
         }
     }, [toggleSetting])
+    console.log(card)
+    function formatDate(date) {
+        var d = new Date(date);
+        return d.toLocaleDateString('en-GB'); // dd/mm/yyyy
+    }
     function handleOpenSetting() {
         setToggleSetting(true)
         setChooseCard(card._id)
@@ -109,8 +116,15 @@ function CardItem({cloneCard, index, card, chooseCard, setChooseCard, moveCard }
     drag(drop(cardRef))
     return (
         <Container  >
-            <Content ref={cardRef} data-handler-id={handlerId} style={{opacity:isDragging&&"0"}} >
-                {!toggleSetting && <span onClick={() => handleOpenSetting()}>{card?.title}</span>}
+            <Content ref={cardRef} data-handler-id={handlerId} style={{ opacity: isDragging && "0" }} >
+                {!toggleSetting && <p onClick={() => handleOpenSetting()}>
+                    {card?.title}
+                    <br />
+                    {card?.due_date&&<span className="due_date">
+                        <FaRegClock></FaRegClock>
+                        { formatDate(card?.due_date)}
+                    </span>}
+                </p>}
                 {toggleSetting && <form action="" onSubmit={(e) => handleEditCardTitle(e)}>
                     <input ref={formRef} type="text" value={cardTitle} onChange={(e) => setCardTitle(e.target.value)} />
                 </form>}
@@ -123,14 +137,15 @@ function CardItem({cloneCard, index, card, chooseCard, setChooseCard, moveCard }
                         <img src="https://www.swimmeet.com/images/icons/color-wheel.png" alt="" />
                         <span>Color</span>
                     </li>
-                    <li>
+                    <li onClick={() => setToggleDayPicker(true)}>
                         <FaRegClock></FaRegClock>
-                        <span>Due</span>
+                        <span>Due data</span>
                     </li>
                     <li onClick={() => setToggleSetting(false)}>
                         <FaTimes></FaTimes>
                     </li>
                 </Setting>}
+                {toggleDayPicker && <DueDate setToggleSetting={setToggleSetting} card={card} setToggleDayPicker={setToggleDayPicker}></DueDate>}
             </Content>
         </Container>
     )
